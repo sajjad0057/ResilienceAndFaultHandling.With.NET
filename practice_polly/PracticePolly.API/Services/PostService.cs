@@ -5,16 +5,17 @@ namespace PracticePolly.API.Services;
 
 public class PostService : IPostService
 {
-    private readonly HttpClient _httpClient;
+    private readonly IHttpClientFactory _httpClient;
 
-    public PostService(HttpClient httpClient)
+    public PostService(IHttpClientFactory httpClient)
     {
         _httpClient = httpClient;
     }
 
     public async Task<List<Post>> GetPostsAsync()
     {
-        var response = await _httpClient.GetAsync("posts");
+        var client = _httpClient.CreateClient("jsonPlaceholder");
+        var response = await client.GetAsync("posts");
         response.EnsureSuccessStatusCode();
 
         var content = await response.Content.ReadAsStringAsync();
